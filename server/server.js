@@ -15,8 +15,6 @@ if (!MONGO_URI) {
 
 mongoose.Promise = global.Promise;
 mongoose.connect(MONGO_URI,  {
-  keepAlive: true,
-  reconnectTries: Number.MAX_VALUE,
   useMongoClient: true
 });
 mongoose.connection
