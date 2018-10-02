@@ -4,14 +4,30 @@ import { graphql } from 'react-apollo'
 import { Link } from 'react-router'
 
 import query from '../queries/fetchSongs'
+import mutationDelete from '../mutations/deleteSongs'
 
 class SongList extends Component{
+    onSongDelete(id) {
+        // whenever you want to wire up a mutation to a 
+        // component you can call it by referring to this duck props
+        this.props.mutate({ variables: { id }
+            })
+            // Rerun the query assosiated with the component
+            .then(() => this.props.data.refetch())
+    }
+
     renderSongs() {
         return this.props.data.songs.map(
-            song => {
+            ({ id, title }) => {
                 return (
-                    <li key={song.id} className="collection-item">
-                        {song.title}
+                    <li key={id} className="collection-item">
+                        {title}
+                        <i
+                            className="material-icons"
+                            onClick={() => this.onSongDelete(id)} 
+                        >
+                            delete
+                        </i>
                     </li>
                 )
             }
@@ -36,4 +52,7 @@ class SongList extends Component{
     }
 }
 
-export default graphql(query)(SongList)
+// multiple functions call
+export default graphql(mutationDelete)(
+    graphql(query)(SongList)
+)
